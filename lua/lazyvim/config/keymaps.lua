@@ -168,3 +168,56 @@ map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
 map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+
+
+map("n", ";", ":", {  desc = "enter command mode" })
+map("n", "<A-v>", "<ESC><C-Q>", {  desc = "Block Visual Mode" })
+
+-- Beginning/End of line
+map("i", "<C-b>", "<ESC>^i", {  desc = "Beginning of line" })
+map("i", "<C-e>", "<End>", {  desc = "End of line" })
+
+-- Delete no Copy
+map("n", "d", '"_d', {  desc = "Delete no Copy" })
+map("n", "x", '"_x', {  desc = "Delete no Copy" })
+
+-- Message
+-- 几种方式：
+-- 1、Telescope notify
+-- 2、require("telescope").load_extension("notify") 
+--       require('telescope').extensions.notify.notify(<opts>)
+-- 3、Notifications
+-- 4、 require("notify").history()
+-- 5、Noice telescope
+
+-- "<cmd>Noice telescope<cr>", 
+map("n", "<leader>mm", "<cmd>Telescope notify", { desc = "Message" })
+
+-- GoToDefinition In Split
+map("n", "gl", "<cmd>GoToDefinitionInSplit<cr>", { desc = "GoToDefinitionInSplit" })
+-- Goto Function Name
+map("n", "gm", "<cmd>GotoFunctionName<cr>", { desc = "GotoFunctionName" })
+-- Find Recent Files
+map("n", "<C-e>", "<cmd>Telescope frecency<cr>", { desc = "FindRecentFiles" })
+-- Grep In Directory
+map("n", "<leader>fd", "<cmd>Telescope dir live_grep<CR>", -- or: <cmd>GrepInDirectory<CR>
+{
+    noremap = true,
+    silent = true,
+    desc = "GrepInDirectory" 
+})
+-- File In Directory
+map("n", "<leader>pd", "<cmd>Telescope dir find_files<CR>", -- or: <cmd>FileInDirectory<CR>
+{
+    noremap = true, 
+    silent = true, 
+    desc = "FileInDirectory" 
+})
+-- Format
+map({"n", "v"}, "<C-A-l>", function()
+    require("lazyvim.util").format({
+        force = true
+    })
+end, {
+    desc = "Format"
+})

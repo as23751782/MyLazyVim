@@ -567,4 +567,9 @@ return {
       { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
     },
   },
+
+  -- surround: https://github.com/tpope/vim-surround
+  {
+    "tpope/vim-surround",
+  }
 }

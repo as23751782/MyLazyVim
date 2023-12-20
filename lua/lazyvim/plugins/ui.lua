@@ -57,7 +57,12 @@ return {
   -- tabs, which include filetype icons and close buttons.
   {
     "akinsho/bufferline.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
+    lazy = false,
+    priority = priority.HIGH,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
     keys = {
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
       { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
@@ -66,8 +71,8 @@ return {
       { "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete buffers to the left" },
       { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev buffer" },
       { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
-      { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev buffer" },
-      { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
+      -- { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev buffer" },
+      -- { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
     },
     opts = {
       options = {
@@ -75,8 +80,8 @@ return {
         close_command = function(n) require("mini.bufremove").delete(n, false) end,
         -- stylua: ignore
         right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
+        always_show_bufferline = true,
         diagnostics = "nvim_lsp",
-        always_show_bufferline = false,
         diagnostics_indicator = function(_, _, diag)
           local icons = require("lazyvim.config").icons.diagnostics
           local ret = (diag.error and icons.Error .. diag.error .. " " or "")
@@ -357,19 +362,7 @@ return {
   -- ui components
   { "MunifTanjim/nui.nvim", lazy = true },
 
-  {
-    "goolord/alpha-nvim",
-    optional = true,
-    enabled = function()
-      require("lazyvim.util").warn({
-        "`dashboard.nvim` is now the default LazyVim starter plugin.",
-        "",
-        "To keep using `alpha.nvim`, please enable the `lazyvim.plugins.extras.ui.alpha` extra.",
-        "Or to hide this message, remove the alpha spec from your config.",
-      })
-      return false
-    end,
-  },
+  -- dashboard
   {
     "nvimdev/dashboard-nvim",
     event = "VimEnter",
@@ -437,6 +430,7 @@ return {
       return opts
     end,
   },
+  -- markdown-preview
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -444,5 +438,65 @@ return {
     build = function()
       vim.fn["mkdp#util#install"]()
     end,
+  },
+
+  -- smooth scrolling
+  {
+    "karb94/neoscroll.nvim",
+    event = "BufEnter",
+    main = "neoscroll",
+    opts = {
+        mappings = {},
+        hide_cursor = true,
+        stop_eof = true,
+        respect_scrolloff = false,
+        cursor_scrolls_alone = true,
+        easing_function = "sine",
+        pre_hook = nil,
+        post_hook = nil,
+        performance_mode = false,
+    },
+    keys = {
+        {
+            "<C-u>",
+            function()
+                require("neoscroll").scroll(-vim.wo.scroll, true, 250)
+            end,
+            desc = "scroll up",
+        },
+        {
+            "<C-i>",
+            function()
+                require("neoscroll").scroll(vim.wo.scroll, true, 250)
+            end,
+            desc = "scroll down",
+        },
+    },
+  },
+
+  -- displays interactive vertical scrollbars 
+  {
+    "dstein64/nvim-scrollview",
+    event = "BufEnter",
+    main = "scrollview",
+    opts = {
+        excluded_filetypes = { "nvimtree" },
+        current_only = true,
+        winblend = 75,
+        base = "right",
+        column = 1,
+    },
+  },
+
+  -- undo tree
+  {
+    "mbbill/undotree",
+      config = function()
+          vim.g.undotree_WindowLayout = 2
+          vim.g.undotree_TreeNodeShape = "-"
+      end,
+      keys = {
+          { "<leader>uu", ":UndotreeToggle<CR>", desc = "undo tree toggle", silent = true, noremap = true },
+      },
   }
 }
