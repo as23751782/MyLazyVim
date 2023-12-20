@@ -15,6 +15,7 @@ return {
       -- during startup.
       require("lazy.core.loader").add_to_rtp(plugin)
       require("nvim-treesitter.query_predicates")
+      require("nvim-treesitter.install").prefer_git = true
     end,
     dependencies = {
       {
@@ -42,6 +43,7 @@ return {
           end
         end,
       },
+      { "hiphish/rainbow-delimiters.nvim" },
     },
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     keys = {
@@ -51,7 +53,10 @@ return {
     ---@type TSConfig
     ---@diagnostic disable-next-line: missing-fields
     opts = {
-      highlight = { enable = true },
+      highlight = { 
+        enable = true, 
+        additional_vim_regex_highlighting = false,
+      },
       indent = { enable = true },
       ensure_installed = {
         "c",
@@ -81,10 +86,10 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-          node_decremental = "<bs>",
+          init_selection = "<CR>",
+          node_incremental = "<CR>",
+          node_decremental = "<BS>",
+          scope_incremental = "<TAB>",
         },
       },
       textobjects = {
@@ -111,6 +116,32 @@ return {
         end, opts.ensure_installed)
       end
       require("nvim-treesitter.configs").setup(opts)
+
+      vim.opt.foldmethod = "expr"
+      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      -- 默认不折叠  https://stackoverflow.com/questions/8316139/how-to-set-the-default-to-unfolded-when-you-open-a-file
+      vim.opt.foldlevel = 99
+
+      local rainbow_delimiters = require("rainbow-delimiters")
+      vim.g.rainbow_delimiters = {
+        strategy = {
+            [""] = rainbow_delimiters.strategy["global"],
+            vim = rainbow_delimiters.strategy["local"],
+        },
+        query = {
+            [""] = "rainbow-delimiters",
+            lua = "rainbow-blocks",
+        },
+        highlight = {
+            "RainbowDelimiterRed",
+            "RainbowDelimiterYellow",
+            "RainbowDelimiterBlue",
+            "RainbowDelimiterOrange",
+            "RainbowDelimiterGreen",
+            "RainbowDelimiterViolet",
+            "RainbowDelimiterCyan",
+        },
+    }
     end,
   },
 

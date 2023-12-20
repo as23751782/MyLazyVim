@@ -315,6 +315,29 @@ return {
         long_message_to_split = true,
         inc_rename = true,
       },
+      commands = {
+        info = {
+          view = "popup",
+          opts = { enter = true, format = "details" },
+          filter = {
+            any = {
+              { event = "notify" },
+              { error = false },
+              { warning = false },
+              { event = "msg_show", kind = { "" } },
+              { event = "lsp", kind = "message" },
+            },
+          },
+          filter_opts = { count = 1 },
+        },
+        errors = {
+          -- options for the message history that you get with `:Noice`
+          view = "split",
+          opts = { enter = true, format = "details" },
+          filter = { error = true },
+          filter_opts = { reverse = true },
+        },
+      },
     },
     -- stylua: ignore
     keys = {
@@ -322,7 +345,7 @@ return {
       { "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
       { "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
       { "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
-      { "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+      { "<esc><esc>", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
       { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
       { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
     },
@@ -352,15 +375,19 @@ return {
     event = "VimEnter",
     opts = function()
       local logo = [[
-           ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
-           ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z    
-           ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z       
-           ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z         
-           ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║           
-           ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝           
+              ▀████▀▄▄              ▄█ 
+                █▀    ▀▀▄▄▄▄▄    ▄▄▀▀█ 
+        ▄        █          ▀▀▀▀▄  ▄▀  
+       ▄▀ ▀▄      ▀▄              ▀▄▀  
+      ▄▀    █     █▀   ▄█▀▄      ▄█    
+      ▀▄     ▀▄  █     ▀██▀     ██▄█   
+       ▀▄    ▄▀ █   ▄██▄   ▄  ▄  ▀▀ █  
+        █  ▄▀  █    ▀██▀    ▀▀ ▀▀  ▄▀  
+       █   █  █      ▄▄           ▄▀   
+    
       ]]
 
-      logo = string.rep("\n", 8) .. logo .. "\n\n"
+      logo = string.rep("\n", 2) .. logo .. "\n"
 
       local opts = {
         theme = "doom",
@@ -410,4 +437,12 @@ return {
       return opts
     end,
   },
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+  }
 }

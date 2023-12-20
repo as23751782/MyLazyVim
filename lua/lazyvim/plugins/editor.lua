@@ -9,7 +9,8 @@ return {
     cmd = "Neotree",
     keys = {
       {
-        "<leader>fe",
+        -- "<leader>fe",
+        "<A-1>",
         function()
           require("neo-tree.command").execute({ toggle = true, dir = Util.root() })
         end,
@@ -226,21 +227,94 @@ return {
           end,
           mappings = {
             i = {
-              ["<c-t>"] = open_with_trouble,
-              ["<a-t>"] = open_selected_with_trouble,
-              ["<a-i>"] = find_files_no_ignore,
-              ["<a-h>"] = find_files_with_hidden,
-              ["<C-Down>"] = actions.cycle_history_next,
-              ["<C-Up>"] = actions.cycle_history_prev,
-              ["<C-f>"] = actions.preview_scrolling_down,
-              ["<C-b>"] = actions.preview_scrolling_up,
+              -- ["<c-t>"] = open_with_trouble,
+              -- ["<a-t>"] = open_selected_with_trouble,
+              -- ["<a-i>"] = find_files_no_ignore,
+              -- ["<a-h>"] = find_files_with_hidden,
+              -- ["<C-Down>"] = actions.cycle_history_next,
+              -- ["<C-Up>"] = actions.cycle_history_prev,
+              -- ["<C-f>"] = actions.preview_scrolling_down,
+              -- ["<C-b>"] = actions.preview_scrolling_up,
+
+               ["<esc>"] = "close",
+                --- Cycle to the next search prompt in the history
+                ["<C-Up>"] = "cycle_history_prev",
+                ["<C-Down>"] = "cycle_history_next",
+                -- 上下移动
+                ["<C-j>"] = "move_selection_next",
+                ["<C-k>"] = "move_selection_previous",
+                ["<Down>"] = "move_selection_next",
+                ["<Up>"] = "move_selection_previous",
+                -- 左右移动
+                ["<Left>"] = "results_scrolling_left",
+                ["<Right>"] = "results_scrolling_right",
+                -- 预览窗口上下滚动
+                ["<A-Up>"] = "preview_scrolling_up",
+                ["<A-Down>"] = "preview_scrolling_down",
+                -- 预览窗口左右滚动
+                ["<A-Left>"] = "preview_scrolling_left",
+                ["<A-Right>"] = "preview_scrolling_right",
+                -- 选中结果以vsplit呈现
+                ["<C-p>"] = "select_vertical",
             },
             n = {
               ["q"] = actions.close,
             },
           },
+          layout_strategy = "horizontal",
+          -- layout_strategy = "vertical",
+          layout_config = {
+            prompt_position = "top",
+            preview_width = 0.65,
+          },
+          sorting_strategy = "ascending",
+          winblend = 0,
         },
       }
+    end,
+  },
+  -- dir-telescope
+  {
+    "princejoogie/dir-telescope.nvim",
+    -- telescope.nvim is a required dependency
+    event = "VeryLazy",
+    requires = { "nvim-telescope/telescope.nvim" },
+    config = function()
+      require("dir-telescope").setup({
+        -- these are the default options set
+        hidden = true,
+        no_ignore = false,
+        show_preview = true,
+        find_command = function()
+          return { "fd", "--type", "d", "--color", "never", "-E", ".git" }
+        end,
+      })
+      require("telescope").load_extension("dir")
+    end,
+  },
+-- telescope-recent-files
+  {
+    "smartpde/telescope-recent-files",
+    event = "VeryLazy",
+    -- cmd: require('telescope').extensions.recent_files.pick()
+    config = function()
+      require("telescope").setup({
+        extensions = {
+          recent_files = {
+            only_cwd = true,
+          },
+        },
+      })
+      require("telescope").load_extension("recent_files")
+    end,
+  },
+-- telescope-frecency
+  {
+    "nvim-telescope/telescope-frecency.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    config = function()
+      require("telescope").load_extension("frecency")
     end,
   },
 

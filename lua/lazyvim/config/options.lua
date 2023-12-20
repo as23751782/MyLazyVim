@@ -89,10 +89,10 @@ end
 
 -- Folding
 vim.opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 -- 默认不要折叠  https://stackoverflow.com/questions/8316139/how-to-set-the-default-to-unfolded-when-you-open-a-file
-vim.opt.foldlevel = 99
+-- vim.opt.foldlevel = 99
 
 vim.o.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
 
